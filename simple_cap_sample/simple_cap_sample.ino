@@ -6,13 +6,10 @@
 
 #include "AudioSampleGong.h"         // http://www.freesound.org/people/juskiddink/sounds/86773/
   
-  int touchpin1 = 23;
-  int reading1 = 0;
-  int threshold = 2500;
-  bool pinState;
-  bool noteState;
-  unsigned long lastDebounce;
-  unsigned long debounceDelay = 20;
+  int touchpin = 23;
+  int threshold = 2000;
+  bool touch;
+
 
 // GUItool: begin automatically generated code
 AudioPlayMemory          playMem1;       //xy=109.14285278320312,136.71428298950195
@@ -40,18 +37,12 @@ void setup() {
 
 void loop() {
 
-  bool tripped = touchRead(touchpin1) > threshold;
-  if (pinState != tripped) {
-    lastDebounce = millis();
-    pinState = tripped;
-  }
-  else if(noteState != pinState && (millis() - lastDebounce) > debounceDelay) {
-    Serial.println(pinState);
-    if (pinState == 1){
-      playMem1.play(AudioSampleGong);
-    }
-     noteState = pinState;
+  if (touchRead(touchpin) > threshold){
+    touch = true;
+    playMem1.play(AudioSampleGong);
+  }else{
+    touch = false;
   }
   delay(10);
-  Serial.println(touchRead(touchpin1));
+  Serial.println(touchRead(touchpin));
 }
